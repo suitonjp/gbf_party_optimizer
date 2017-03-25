@@ -37,4 +37,26 @@ function loadWeapons(data, target_ele, fix, slvmax){
     }
     wpArr.push(newwp)
   }
+  
+  // 武器を分類分け
+  //   fix: 固定編成の武器　必ず編成される
+  //   skill: 該当属性の攻刃/背水持ちの武器, コスモス武器
+  //   noskill: スキルが発揮されない武器
+  var weaponList = {fix: new Array(),
+                    skill: new Array(),
+                    noskill: new Array(),
+                    cosmos: new Array()}
+
+  // 固定編成武器のチェック
+  for(var prop in fix) {
+    if(fix.hasOwnProperty(prop)){
+      for(var i=0; i<wpArr.length; i++){
+        if(fix[prop].name == wpArr[i].name){
+          weaponList.fix.push(wpArr[i]);
+          wpArr.splice(i, 1);
+          break;
+        }
+      }
+    }
+  }
 }
