@@ -59,4 +59,83 @@ function loadWeapons(data, target_ele, fix, slvmax){
       }
     }
   }
+  
+  for(var i=0; i<wpArr.length; i++){
+    if(wpArr[i].desel == "除外") continue;
+    
+    if(wpArr[i].bahamut_atk || wpArr[i].bahamut_atkhp){
+      weaponList.skill.push(wpArr[i])
+    }else if(wpArr[i].skill1.indexOf("オブ・コスモス") != -1){
+      weaponList.cosmos.push(wpArr[i])
+    }else{
+      if(target_ele == "火"){
+        if(wpArr[i].gen_fire_atk || wpArr[i].magna_fire_atk ||
+           wpArr[i].gen_fire_bob || wpArr[i].magna_fire_bob ||
+           wpArr[i].gen_fire_kns || wpArr[i].magna_fire_kns ||
+           wpArr[i].gen_fire_da  || wpArr[i].magna_fire_da ||
+           wpArr[i].gen_fire_ta  || wpArr[i].magna_fire_ta ||
+           (wpArr[i].unknown_atk && target_ele == wpArr[i].ele)){
+          weaponList.skill.push(wpArr[i])
+        }else{
+          weaponList.noskill.push(wpArr[i])
+        }
+      }else if(target_ele == "水"){
+        if(wpArr[i].gen_water_atk || wpArr[i].magna_water_atk ||
+           wpArr[i].gen_water_bob || wpArr[i].magna_water_bob ||
+           wpArr[i].gen_water_kns || wpArr[i].magna_water_kns ||
+           wpArr[i].gen_water_da  || wpArr[i].magna_water_da ||
+           wpArr[i].gen_water_ta  || wpArr[i].magna_water_ta ||
+           (wpArr[i].unknown_atk && target_ele == wpArr[i].ele)){
+          weaponList.skill.push(wpArr[i])
+        }else{
+          weaponList.noskill.push(wpArr[i])
+        }
+      }else if(target_ele == "土"){
+        if(wpArr[i].gen_earth_atk || wpArr[i].magna_earth_atk ||
+           wpArr[i].gen_earth_bob || wpArr[i].magna_earth_bob ||
+           wpArr[i].gen_earth_kns || wpArr[i].magna_earth_kns ||
+           wpArr[i].gen_earth_da  || wpArr[i].magna_earth_da ||
+           wpArr[i].gen_earth_ta  || wpArr[i].magna_earth_ta ||
+           (wpArr[i].unknown_atk && target_ele == wpArr[i].ele)){
+          weaponList.skill.push(wpArr[i])
+        }else{
+          weaponList.noskill.push(wpArr[i])
+        }
+      }else if(target_ele == "風"){
+        if(wpArr[i].gen_wind_atk || wpArr[i].magna_wind_atk ||
+           wpArr[i].gen_wind_bob || wpArr[i].magna_wind_bob ||
+           wpArr[i].gen_wind_kns || wpArr[i].magna_wind_kns ||
+           wpArr[i].gen_wind_da  || wpArr[i].magna_wind_da ||
+           wpArr[i].gen_wind_ta  || wpArr[i].magna_wind_ta ||
+           (wpArr[i].unknown_atk && target_ele == wpArr[i].ele)){
+          weaponList.skill.push(wpArr[i])
+        }else{
+          weaponList.noskill.push(wpArr[i])
+        }
+      }else if(target_ele == "光"){
+        if(wpArr[i].gen_light_atk || wpArr[i].magna_light_atk ||
+           wpArr[i].gen_light_bob || wpArr[i].magna_light_bob ||
+           wpArr[i].gen_light_kns || wpArr[i].magna_light_kns ||
+           wpArr[i].gen_light_da  || wpArr[i].magna_light_da ||
+           wpArr[i].gen_light_ta  || wpArr[i].magna_light_ta ||
+           (wpArr[i].unknown_atk && target_ele == wpArr[i].ele)){
+          weaponList.skill.push(wpArr[i])
+        }else{
+          weaponList.noskill.push(wpArr[i])
+        }
+      }else if(target_ele == "闇"){
+        if(wpArr[i].gen_dark_atk || wpArr[i].magna_dark_atk ||
+           wpArr[i].gen_dark_bob || wpArr[i].magna_dark_bob ||
+           wpArr[i].gen_dark_kns || wpArr[i].magna_dark_kns ||
+           wpArr[i].gen_dark_da  || wpArr[i].magna_dark_da ||
+           wpArr[i].gen_dark_ta  || wpArr[i].magna_dark_ta ||
+           (wpArr[i].unknown_atk && target_ele == wpArr[i].ele)){
+          weaponList.skill.push(wpArr[i])
+        }else{
+          weaponList.noskill.push(wpArr[i])
+        }
+      }
+    }
+  }
+
 }
