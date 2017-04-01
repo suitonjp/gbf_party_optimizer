@@ -443,3 +443,266 @@ function calcAtkHP(info, chara, main_summon, supt_summon, weapon, calc_opt){
   return {disp_atk:disp_atk, disp_hp:disp_hp, total_atk:total_atk,
           nbuf_atk:nbuf_atk, base_atk:base_atk, total_hp:total_hp, skill:skill, bless:bless};
 }
+
+
+// ジョブボーナスの計算
+function calcJobBonus(jobData, jobname){
+  var bonus = {hp_ratio:0, atk_ratio:0, atk:0, hp:0, pt_hp:0,
+               ele_fire:0, ele_water:0, ele_earth:0,
+               ele_wind:0, ele_light:0, ele_dark:0}
+  var tokui = {};
+  var type = "なし";
+
+  // ボーナスの計算
+  for(i=2;i<jobData.length;i++){
+    /* ---- マスターボーナス ---- */
+    if(jobData[i][1] == 20){
+      switch (jobData[i][0]){
+        case "ファイター":
+          bonus.atk_ratio += 0.01;
+          break;
+        case "グラップラー":
+        case "ランサー":
+          bonus.hp_ratio += 0.01;
+          break;
+        case "ウォーリア":
+          bonus.atk_ratio += 0.02;
+          break;
+        case "クンフー":
+        case "ドラグーン":
+          bonus.hp_ratio += 0.02;
+          break;
+        case "ウェポンマスター":
+          bonus.atk_ratio += 0.03;
+          break;
+        case "オーガ":
+        case "ヴァルキュリア":
+          bonus.hp_ratio += 0.03;
+          break;
+        case "侍":
+          bonus.atk_ratio += 0.05;
+          break;
+        case "剣聖":
+          bonus.atk_ratio += 0.02;
+          break;
+        case "ベルセルク":
+          bonus.atk_ratio += 0.02;
+          bonus.hp_ratio += 0.01;
+          break;
+        case "スパルタ":
+          bonus.hp_ratio += 0.01;
+          break;
+        case "ウォーロック":
+          bonus.atk_ratio += 0.01;
+          break;
+        case "義賊":
+          bonus.atk_ratio += 0.01;
+          break;
+        case "レスラー":
+          bonus.hp_ratio += 0.01;
+          bonus.atk_ratio += 0.01;
+          break;
+      }
+    }
+    
+    /* ---- ジョブボーナス ---- */
+    if(jobData[i][0] == jobname){
+      bonus.atk = Number(jobData[i][2])
+      bonus.hp = Number(jobData[i][4])
+      bonus.ele_fire  = Number(jobData[i][5])
+      bonus.ele_water = Number(jobData[i][6])
+      bonus.ele_earth = Number(jobData[i][7])
+      bonus.ele_wind  = Number(jobData[i][8])
+      bonus.ele_light = Number(jobData[i][9])
+      bonus.ele_dark  = Number(jobData[i][10])
+      bonus.pt_hp = jobData[i][13]
+      
+      // 得意武器 II への対応
+      jobData[i][11] = Number(jobData[i][11]) + Number(jobData[i][14])
+      jobData[i][12] = Number(jobData[i][12]) + Number(jobData[i][15])
+      
+      switch (jobname){
+        // ウェポンマスター系統
+        case "ウェポンマスター":
+          bonus.atk += 300 * (Math.floor(jobData[i][1]/5) + 1);
+        case "ウォーリア":
+          bonus.atk += 300 * (Math.floor(jobData[i][1]/5) + 1);
+        case "ファイター":
+          bonus.atk += 300 * (Math.floor(jobData[i][1]/5) + 1);
+          tokui = {剣:0.2+jobData[i][11], 斧:0.2+jobData[i][12]}
+          type = '攻撃';
+          break;
+        // ホーリーセイバー系統
+        case "ホーリーセイバー":
+        case "フォートレス":
+        case "ナイト":
+          tokui = {剣:0.2+jobData[i][11], 槍:0.2+jobData[i][12]}
+          type = '防御';
+          break;
+        // ビショップ系統
+        case "ビショップ":
+        case "プリースト":
+        case "クレリック":
+          tokui = {杖:0.2+jobData[i][11], 槍:0.2+jobData[i][12]}
+          type = '回復';
+          break;
+        // ハーミット系統
+        case "ハーミット":
+        case "ソーサラー":
+        case "ウィザード":
+          tokui = {杖:0.2+jobData[i][11], 短剣:0.2+jobData[i][12]}
+          type = '攻撃';
+          break;
+        // ホークアイ系統
+        case "ホークアイ":
+        case "レイダー":
+        case "シーフ":
+          tokui = {短剣:0.2+jobData[i][11], 銃:0.2+jobData[i][12]}
+          type = 'バランス';
+          break;
+        // ダークフェンサー系統
+        case "ダークフェンサー":
+        case "アルカナソード":
+        case "エンハンサー":
+          tokui = {剣:0.2+jobData[i][11], 短剣:0.2+jobData[i][12]}
+          type = '特殊';
+          break;
+        // オーガ系統
+        case "オーガ":
+        case "クンフー":
+          bonus.atk += 200 * (Math.floor(jobData[i][1]/5) + 1);
+          bonus.hp += 20 * (Math.floor(jobData[i][1]/5) + 1);
+        case "グラップラー":
+          bonus.atk += 200 * (Math.floor(jobData[i][1]/5) + 1);
+          bonus.hp += 20 * (Math.floor(jobData[i][1]/5) + 1);
+          tokui = {格闘:0.2+jobData[i][11]+jobData[i][12]}
+          type = '攻撃';
+          break;
+        // サイドワインダー系統
+        case "サイドワインダー":
+          bonus.atk += 50 * (Math.floor(jobData[i][1]/5) + 1);
+        case "マークスマン":
+          bonus.atk += 50 * (Math.floor(jobData[i][1]/5) + 1);
+        case "レンジャー":
+          bonus.atk += 100 * (Math.floor(jobData[i][1]/5) + 1);
+          tokui = {弓:0.2+jobData[i][11], 銃:0.2+jobData[i][12]}
+          type = 'バランス';
+          break;
+        // スーパースター系統
+        case "スーパースター":
+        case "ミンストレル":
+        case "ハーピスト":
+          tokui = {楽器:0.2+jobData[i][11], 短剣:0.2+jobData[i][12]}
+          type = '特殊';
+          break;
+        // ヴァルキュリア系統
+        case "ドラグーン":
+          bonus.atk += 100 * (Math.floor(jobData[i][1]/5) + 1);
+        case "ヴァルキュリア":
+          bonus.atk += 100 * (Math.floor(jobData[i][1]/5) + 1);
+          tokui = {槍:0.2+jobData[i][11], 斧:0.2+jobData[i][12]}
+          type = '攻撃';
+          break;
+        case "ランサー":
+          bonus.atk_ratio += 0.01 * (Math.floor(jobData[i][1]/5) + 1);
+          tokui = {槍:0.2+jobData[i][11], 斧:0.2+jobData[i][12]}
+          type = '攻撃';
+          break;
+        // エクストラジョブ
+        case "アルケミスト":
+          bonus.hp += 20 * (Math.floor(jobData[i][1]/5) + 1);
+          tokui = {短剣:0.2+jobData[i][11], 銃:0.2+jobData[i][12]}
+          type = '回復';
+          break;
+        case "忍者":
+          tokui = {刀:0.2+jobData[i][11], 格闘:0.2+jobData[i][12]}
+          type = '特殊';
+          break;
+        case "侍":
+          bonus.atk += 600 * (Math.floor(jobData[i][1]/5) + 1);
+          tokui = {刀:0.2+jobData[i][11], 弓:0.2+jobData[i][12]}
+          type = '攻撃';
+          break;
+        case "剣聖":
+          bonus.atk += 300 * (Math.floor(jobData[i][1]/5) + 1);
+          bonus.hp += 60 * (Math.floor(jobData[i][1]/5) + 1);
+          tokui = {剣:0.2+jobData[i][11], 刀:0.2+jobData[i][12]}
+          type = '特殊';
+          break;
+        case "ガンスリンガー":
+          bonus.atk += 200 * (Math.floor(jobData[i][1]/5) + 1);
+          tokui = {銃:0.2+jobData[i][11]+jobData[i][12]}
+          type = '特殊';
+          break;
+        case "賢者":
+          bonus.hp += 200 * (Math.floor(jobData[i][1]/5) + 1);
+          tokui = {杖:0.2+jobData[i][11]+jobData[i][12]}
+          type = '特殊';
+          break;
+        case "アサシン":
+          bonus.hp += 200 * (Math.floor(jobData[i][1]/5) + 1);
+          tokui = {短剣:0.2+jobData[i][11]+jobData[i][12]}
+          type = '特殊';
+          break;
+        // Class 4
+        case "ベルセルク":
+          bonus.atk += 2000 * (Math.floor(jobData[i][1]/10) + 1);
+          bonus.hp += 500 * (Math.floor((jobData[i][1]+5)/10));
+          tokui = {剣:0.2+jobData[i][11], 斧:0.2+jobData[i][12]}
+          type = '攻撃';
+          break;
+        case "セージ":
+          tokui = {杖:0.2+jobData[i][11], 槍:0.2+jobData[i][12]}
+          type = '回復';
+          break;
+        case "スパルタ":
+          bonus.hp += 750 * (Math.floor((jobData[i][1]+5)/10));
+          tokui = {剣:0.2+jobData[i][11], 槍:0.2+jobData[i][12]}
+          type = '防御';
+          break
+        case "ウォーロック":
+          bonus.atk += 1000 * (Math.floor((jobData[i][1]+5)/10));
+          tokui = {杖:0.2+jobData[i][11], 短剣:0.2+jobData[i][12]}
+          type = '攻撃';
+          break
+        case "カオスルーダー":
+          tokui = {剣:0.2+jobData[i][11], 短剣:0.2+jobData[i][12]}
+          type = '特殊';
+          break
+        case "義賊":
+          tokui = {短剣:0.2+jobData[i][11], 銃:0.2+jobData[i][12]}
+          type = 'バランス';
+          break
+        case "レスラー":
+          bonus.atk += 1000 * (Math.floor((jobData[i][1]+9)/10));
+          bonus.hp += 150 * (Math.floor((jobData[i][1]+5)/10));
+          tokui = {格闘:0.2+jobData[i][11]+jobData[i][12]}
+          type = '攻撃';
+          break;
+        case "ハウンドドッグ":
+          bonus.atk += 600 * (Math.floor(jobData[i][1]/10) + 1);
+          tokui = {弓:0.2+jobData[i][11], 銃:0.2+jobData[i][12]}
+          type = 'バランス';
+          break;
+        case "アプサラス":
+          bonus.atk += (jobData[i][1] < 10)? 1000 : 2000;
+          tokui = {槍:0.2+jobData[i][11], 斧:0.2+jobData[i][12]}
+          type = '攻撃';
+          break;
+      }
+    }
+    
+  }
+
+  // Number への変換
+  for (var prop in bonus) {
+    bonus[prop] = Number(bonus[prop])
+  }
+  for (var prop in tokui) {
+    tokui[prop] = Number(tokui[prop])
+  }
+  bonus.tokui = tokui
+  bonus.type = type
+
+  return bonus
+}
