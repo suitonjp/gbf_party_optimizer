@@ -167,10 +167,10 @@ function loadWeapons(data, target_ele, fix, slvmax){
 function getSkillEffect_(weapon_name, skill_name, skill_level){
   // 同名スキルが存在するが、効果量が違う場合などの対応
   if(weapon_name == "世界樹の雫枝・マグナ" || weapon_name == "世界樹の雫枝・マグナ (最終)"){
-    if(skill_name == "創樹方陣・守護") return ["magna_earth_hp", hp_s_mu(skill_level)];
+    if(skill_name == "創樹方陣・守護") return ["magna_earth_hp", hp_s_mu_(skill_level)];
   }
   else if(weapon_name == "アンノウンスタンプ"){
-    if(skill_name == "アンノウン・VIT") return ["unknown_hp", hp_s_mu(skill_level)];
+    if(skill_name == "アンノウン・VIT") return ["unknown_hp", hp_s_mu_(skill_level)];
   }
   
   // スキル名判定
@@ -181,8 +181,8 @@ function getSkillEffect_(weapon_name, skill_name, skill_level){
     // コラボ系武器（アンノウン枠として統一）
     case "アンノウン・ATK": 
     case "エクストラ・ATK": return ["unknown_atk", atk_m_(skill_level)];
-    case "アンノウン・VIT": return ["unknown_hp",  hp_m_mu(skill_level)];
-    case "アンノウン・VIT II": return ["unknown_hp",  hp_b_mu(skill_level)];
+    case "アンノウン・VIT": return ["unknown_hp",  hp_m_mu_(skill_level)];
+    case "アンノウン・VIT II": return ["unknown_hp",  hp_b_mu_(skill_level)];
     case "アンノウン・ATK II":
     case "エクストラ・ATK II":
     case "ストレングス":
@@ -299,16 +299,16 @@ function getSkillEffect_(weapon_name, skill_name, skill_level){
   else if(stype == "m"){
     suf = skill_name.slice(5)
     if(suf == "攻刃II") return [spref+"_atk", atk_b_(skill_level)];
-    if(suf == "守護II") return [spref+"_hp",  hp_b_mu(skill_level)];
+    if(suf == "守護II") return [spref+"_hp",  hp_b_mu_(skill_level)];
     if(suf == "背水II") return [spref+"_bob", bob_b_(skill_level)];
     if(suf == "攻刃") return [spref+"_atk", atk_m_(skill_level)];
-    if(suf == "守護") return [spref+"_hp",  hp_m_mu(skill_level)];
+    if(suf == "守護") return [spref+"_hp",  hp_m_mu_(skill_level)];
     if(suf == "背水") return [spref+"_bob", bob_s_(skill_level)];
     if(suf == "暴君") return [spref+"_atk", atk_b_(skill_level), spref+"_bkn", 0.1];
     if(suf == "刹那") return [spref+"_atk", atk_m_(skill_level), spref+"_cri", cri_m_(skill_level)];
     if(suf == "羅刹") return [spref+"_atk", atk_m_(skill_level)];
     if(suf == "克己") return [spref+"_da",  da_m_(skill_level), spref+"_cri", cri_m_(skill_level)];
-    if(suf == "神威") return [spref+"_atk", atk_s_(skill_level), spref+"_hp", hp_s_mu(skill_level)];
+    if(suf == "神威") return [spref+"_atk", atk_s_(skill_level), spref+"_hp", hp_s_mu_(skill_level)];
     if(suf == "三手") return [spref+"_da",  da_b_(skill_level), spref+"_ta", ta_b_(skill_level)];
   }  
 }
@@ -349,15 +349,15 @@ function hp_s_(skill_level){
   return 0.02+((skill_level<=10)? 0.01*skill_level : 0.1+(0.02/5)*(skill_level-10));
 }
 
-function hp_b_mu(skill_level){
+function hp_b_mu_(skill_level){
   return 0.05+((skill_level<=10)? 0.01*skill_level : 0.1+(0.03/5)*(skill_level-10));
 }
 
-function hp_m_mu(skill_level){
+function hp_m_mu_(skill_level){
   return 0.02+((skill_level<=10)? 0.01*skill_level : 0.1+(0.025/5)*(skill_level-10));
 }
 
-function hp_s_mu(skill_level){
+function hp_s_mu_(skill_level){
   return ((skill_level<=10)? 0.01*skill_level : 0.1+(0.02/5)*(skill_level-10));
 }
 
